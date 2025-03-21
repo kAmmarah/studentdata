@@ -6,7 +6,6 @@ import os
 from openpyxl import Workbook
 
 st.set_page_config(page_title="🎓 Student Data & Analysis App 📊", page_icon="📚")
-
 st.title("🎓 Student Data Management & Analysis App 📈📚✨")
 
 # Excel file setup
@@ -16,6 +15,20 @@ if not os.path.exists(file_path):
     ws = wb.active
     ws.append(["Name", "Roll Number", "Class", "Marks"])
     wb.save(file_path)
+
+# File upload section
+st.subheader("⬆️ Upload Student Excel File (Optional)")
+uploaded_file = st.file_uploader("Choose an Excel file to upload", type=["xlsx"])
+
+if uploaded_file is not None:
+    try:
+        uploaded_df = pd.read_excel(uploaded_file, engine='openpyxl')
+        main_df = pd.read_excel(file_path, engine='openpyxl')
+        updated_df = pd.concat([main_df, uploaded_df], ignore_index=True)
+        updated_df.to_excel(file_path, index=False)
+        st.success("✅ Uploaded data added successfully!")
+    except Exception as e:
+        st.error(f"❌ Error processing uploaded file: {e}")
 
 # Data Entry Form
 with st.form("student_form"):
@@ -29,7 +42,7 @@ with st.form("student_form"):
 
     if submit:
         if name and roll:
-            df = pd.read_excel(file_path)
+            df = pd.read_excel(file_path, engine='openpyxl')
             new_data = {"Name": name, "Roll Number": roll, "Class": s_class, "Marks": marks}
             df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
             df.to_excel(file_path, index=False)
@@ -38,7 +51,7 @@ with st.form("student_form"):
             st.error("⚠️ Please fill in all fields!")
 
 # Load Data
-df = pd.read_excel(file_path)
+df = pd.read_excel(file_path, engine='openpyxl')
 
 # Show All Data
 if st.button("📂 Show All Student Data"):
@@ -92,6 +105,6 @@ if st.checkbox("📊 Show General Stats"):
 
 st.markdown("---")
 st.markdown("📌 *App created for student data management & analysis with love ❤️ by Ammara*")
+
 # Hidden credit line for Ammara
 st.markdown('<p style="color:white; font-size:8px;">This app is created by Ammara</p>', unsafe_allow_html=True)
-
