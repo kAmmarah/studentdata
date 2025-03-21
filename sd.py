@@ -91,4 +91,7 @@ if st.checkbox("📊 Show General Stats"):
     st.write("✅ Lowest Marks:", filtered_data['Marks'].min())
 
 st.markdown("---")
-st.markdown("📌 *App created for student data management & analysis with love ❤️*")
+st.markdown("📌 *App created for student data management & analysis with love ❤️ by Ammara*")
+# Hidden credit line for Ammara
+st.markdown('<p style="color:white; font-size:8px;">This app is created by Ammara</p>', unsafe_allow_html=True)
+
